@@ -55,7 +55,6 @@ const updateBlocks = (opts, pollUpdates) => {
         $liveblogBody.offset().top < window.pageYOffset;
 
     const isLivePage = !window.location.search.includes('?page=');
-
     const revealInjectedElements = () => {
         fastdom.mutate(() => {
             $('.autoupdate--hidden', $liveblogBody)
@@ -120,7 +119,8 @@ const updateBlocks = (opts, pollUpdates) => {
 
         let count = 0;
         const filterByKeyEvents = `&filterByKeyEvents=${filterStatus ? 'true' : 'false'}`;
-        const userInteraction = `&userInteraction=${!auto}`
+        const userInteractionStatus = !auto
+        const userInteraction = `&userInteraction=${userInteractionStatus}`
         const shouldFetchBlocks = `&isLivePage=${
             isLivePage ? 'true' : 'false'
         }`;
