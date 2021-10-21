@@ -5,7 +5,7 @@ import qwery from 'qwery';
 import $ from 'lib/$';
 import fastdom from 'lib/fastdom-promise';
 import {fetchJson} from 'lib/fetch-json';
-import {isBreakpoint, pageVisible, initPageVisibility} from 'lib/detect';
+import {initPageVisibility, isBreakpoint, pageVisible} from 'lib/detect';
 import mediator from 'lib/mediator';
 import {enhanceTweets} from 'common/modules/article/twitter';
 import {Sticky} from 'common/modules/ui/sticky';
@@ -121,14 +121,13 @@ const updateBlocks = (opts, pollUpdates) => {
 
         let count = 0;
         const filterByKeyEvents = `&filterByKeyEvents=${filterStatus ? 'true' : 'false'}`;
-        const isUserInteraction = !auto
-        const userInteraction = `&userInteraction=${isUserInteraction}`
-        const userUpdate = !hasPageParams || isUserInteraction
+        const userInteraction = !auto
+        const userUpdate = !hasPageParams || userInteraction
         const shouldFetchBlocks = `&isLivePage=${
             userUpdate ? 'true' : 'false'
         }`;
         const latestBlockIdToUse = latestBlockId || 'block-0';
-        const params = `?lastUpdate=${latestBlockIdToUse}${shouldFetchBlocks}${filterByKeyEvents}${userInteraction}`;
+        const params = `?lastUpdate=${latestBlockIdToUse}${shouldFetchBlocks}${filterByKeyEvents}&userInteraction=${userInteraction}`;
         const endpoint = `${window.location.pathname}.json${params}`;
 
         // #? One day this should be in Promise.finally()
@@ -160,8 +159,8 @@ const updateBlocks = (opts, pollUpdates) => {
 
                     latestBlockId = resp.mostRecentBlockId;
                     if (userUpdate) {
-                        injectNewBlocks(resp.html, isUserInteraction);
-                        if (scrolledPastTopBlock() && !isUserInteraction) {
+                        injectNewBlocks(resp.html, userInteraction);
+                        if (scrolledPastTopBlock() && !userInteraction) {
                             toastButtonRefresh();
                         } else {
                             displayNewBlocks();
