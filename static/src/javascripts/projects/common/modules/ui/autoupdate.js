@@ -120,6 +120,7 @@ const updateBlocks = (opts, pollUpdates) => {
         }
 
         let count = 0;
+        console.log('filterStatus',filterStatus)
         const filterByKeyEvents = `&filterByKeyEvents=${filterStatus ? 'true' : 'false'}`;
         const userInteraction = !auto
         const userUpdate = !hasPageParams || userInteraction

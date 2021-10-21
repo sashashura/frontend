@@ -10,7 +10,7 @@ import views.html.fragments.page.body._
 import views.support.Commercial
 
 trait HtmlPage[P <: model.Page] {
-  def html(page: P)(implicit request: RequestHeader, applicationContext: ApplicationContext): Html
+  def html(page: P, filterByKeyEvents: Option[Boolean] = Some(true))(implicit request: RequestHeader, applicationContext: ApplicationContext): Html
 }
 
 object HtmlPageHelpers {

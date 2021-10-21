@@ -10,7 +10,7 @@ import views.html.fragments.email.{emailArticleBody, emailArticleCss}
 object ArticleEmailHtmlPage extends HtmlPage[PageWithStoryPackage] {
 
   def html(
-      page: PageWithStoryPackage,
+      page: PageWithStoryPackage, filterByKeyEvents: Option[Boolean] = None
   )(implicit request: RequestHeader, applicationContext: ApplicationContext): Html = {
     implicit val p: PageWithStoryPackage = page
     htmlTag(

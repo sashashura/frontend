@@ -9,7 +9,7 @@ import play.twirl.api.Html
 import views.html.fragments._
 
 object ArticleHtmlPage extends HtmlPage[ArticlePage] {
-  def html(page: ArticlePage)(implicit request: RequestHeader, applicationContext: ApplicationContext): Html = {
+  def html(page: ArticlePage, filterByKeyEvents: Option[Boolean] = Some(true))(implicit request: RequestHeader, applicationContext: ApplicationContext): Html = {
     implicit val p: ArticlePage = page
 
     val (header, content): (Html, Html) = page.article match {

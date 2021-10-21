@@ -55,6 +55,7 @@ class LiveBlogController(
   }
 
   def renderWithRange(path: String, range: BlockRange, filterByKeyEvents: Option[Boolean])(implicit request: RequestHeader): Future[Result] = {
+    println("renderWithRange", filterByKeyEvents)
     mapModel(path, range, filterByKeyEvents) { (page, blocks) =>
       {
         val isAmpSupported = page.article.content.shouldAmplify
@@ -65,7 +66,7 @@ class LiveBlogController(
           case (blog: LiveBlogPage, HtmlFormat) => {
             val remoteRendering = request.forceDCR && ActiveExperiments.isParticipating(LiveblogRendering)
             remoteRendering match {
-              case false => Future.successful(common.renderHtml(LiveBlogHtmlPage.html(blog), blog))
+              case false => Future.successful(common.renderHtml(LiveBlogHtmlPage.html(blog, filterByKeyEvents), blog))
               case true => {
                 val pageType: PageType = PageType(blog, request, context)
                 remoteRenderer.getArticle(ws, blog, blocks, pageType)
@@ -75,7 +76,7 @@ class LiveBlogController(
           case (blog: LiveBlogPage, AmpFormat) if isAmpSupported =>
             remoteRenderer.getAMPArticle(ws, blog, blocks, pageType)
           case (blog: LiveBlogPage, AmpFormat) =>
-            Future.successful(common.renderHtml(LiveBlogHtmlPage.html(blog), blog))
+            Future.successful(common.renderHtml(LiveBlogHtmlPage.html(blog, filterByKeyEvents), blog))
           case _ => Future.successful(NotFound)
         }
       }
@@ -83,6 +84,8 @@ class LiveBlogController(
   }
 
   def renderArticle(path: String, page: Option[String] = None, filterByKeyEvents: Option[Boolean]): Action[AnyContent] = {
+    println("renderArticle", filterByKeyEvents)
+
     Action.async { implicit request =>
       page.map(ParseBlockId.fromPageParam) match {
         case Some(ParsedBlockId(id)) => renderWithRange(path, PageWithBlock(id), filterByKeyEvents) // we know the id of a block
@@ -148,7 +151,7 @@ class LiveBlogController(
 
     range match {
       case SinceBlockId(lastBlockId) => renderNewerUpdatesJson(liveblog, SinceBlockId(lastBlockId), isLivePage, filterByKeyEvents)
-      case _                         => Future.successful(common.renderJson(views.html.liveblog.liveBlogBody(liveblog),liveblog))
+      case _                         => Future.successful(common.renderJson(views.html.liveblog.liveBlogBody(liveblog, filterByKeyEvents),liveblog))
     }
   }
 
@@ -184,7 +187,7 @@ class LiveBlogController(
     val newBlocks = flatMapBlocks(page, lastUpdateBlockId, filterByKeyEvents);
 
     val blocksHtml = views.html.liveblog.liveBlogBlocks(newBlocks, page.article, Edition(request).timezone)
-    val timelineHtml = views.html.liveblog.keyEvents("", model.KeyEventData(newBlocks, Edition(request).timezone))
+    val timelineHtml = views.html.liveblog.keyEvents("", model.KeyEventData(newBlocks, Edition(request).timezone), filterByKeyEvents.getOrElse(false))
 
     val allPagesJson = Seq(
       "timeline" -> timelineHtml,
@@ -227,7 +230,7 @@ class LiveBlogController(
                                        )(implicit request: RequestHeader): Future[Result] = {
     val newBlocks = flatMapKeyEventsBlocks(page, filterByKeyEvents)
     val blocksHtml = views.html.liveblog.liveBlogBlocks(newBlocks, page.article, Edition(request).timezone)
-    val timelineHtml = views.html.liveblog.keyEvents("", model.KeyEventData(newBlocks, Edition(request).timezone))
+    val timelineHtml = views.html.liveblog.keyEvents("", model.KeyEventData(newBlocks, Edition(request).timezone), filterByKeyEvents.getOrElse(false))
 
     val allPagesJson = Seq(
       "timeline" -> timelineHtml,

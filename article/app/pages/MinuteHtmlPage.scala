@@ -9,7 +9,7 @@ import views.html.fragments.{immersiveGarnettHeader, minuteBody}
 
 object MinuteHtmlPage extends HtmlPage[MinutePage] {
 
-  def html(page: MinutePage)(implicit request: RequestHeader, applicationContext: ApplicationContext): Html = {
+  def html(page: MinutePage, filterByKeyEvents: Option[Boolean] = None)(implicit request: RequestHeader, applicationContext: ApplicationContext): Html = {
     implicit val p: MinutePage = page
     StoryHtmlPage.html(
       header = immersiveGarnettHeader(),

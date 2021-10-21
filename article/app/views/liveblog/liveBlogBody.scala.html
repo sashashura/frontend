@@ -2,7 +2,7 @@
 @import model.Badges.badgeFor
 @import model.{KeyEventData, LiveBlogPage}
 
-@(model: LiveBlogPage)(implicit request: RequestHeader, context: _root_.model.ApplicationContext)
+@(model: LiveBlogPage, filterByKeyEvents: Option[Boolean])(implicit request: RequestHeader, context: _root_.model.ApplicationContext)
 
 @import common.{Edition, LinkTo}
 @import conf.switches.Switches._
@@ -81,7 +81,7 @@
                                             <div data-component="timeline">
                                             @fragments.dropdown("Key events", Some("key-events"), true) {
                                                 <ul class="timeline js-live-blog__timeline u-unstyled">
-                                                @views.html.liveblog.keyEvents("/" + article.metadata.id, keyEventData)
+                                                @views.html.liveblog.keyEvents("/" + article.metadata.id, keyEventData, filterByKeyEvents.getOrElse(false))
                                                 </ul>
                                             }
                                         </div>

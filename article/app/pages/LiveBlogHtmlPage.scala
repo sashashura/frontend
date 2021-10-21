@@ -12,8 +12,9 @@ import views.html.liveblog.liveBlogBody
 
 object LiveBlogHtmlPage extends HtmlPage[LiveBlogPage] {
 
-  def html(page: LiveBlogPage)(implicit request: RequestHeader, applicationContext: ApplicationContext): Html = {
+  def html(page: LiveBlogPage, filterByKeyEvents: Option[Boolean])(implicit request: RequestHeader, applicationContext: ApplicationContext): Html = {
     implicit val p: LiveBlogPage = page
+    println("html filter by key events",filterByKeyEvents )
 
     val headContent = liveBlogHead(
       next = page.currentPage.pagination
@@ -36,7 +37,7 @@ object LiveBlogHtmlPage extends HtmlPage[LiveBlogPage] {
     StoryHtmlPage.html(
       maybeHeadContent = Some(headContent),
       header = guardianHeaderHtml(),
-      content = liveBlogBody(page),
+      content = liveBlogBody(page,filterByKeyEvents),
     )
   }
 
