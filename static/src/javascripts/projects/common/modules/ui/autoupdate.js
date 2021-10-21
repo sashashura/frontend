@@ -4,22 +4,22 @@ import qwery from 'qwery';
 
 import $ from 'lib/$';
 import fastdom from 'lib/fastdom-promise';
-import { fetchJson } from 'lib/fetch-json';
-import { isBreakpoint, pageVisible, initPageVisibility } from 'lib/detect';
+import {fetchJson} from 'lib/fetch-json';
+import {isBreakpoint, pageVisible, initPageVisibility} from 'lib/detect';
 import mediator from 'lib/mediator';
-import { enhanceTweets } from 'common/modules/article/twitter';
-import { Sticky } from 'common/modules/ui/sticky';
-import { scrollToElement } from 'lib/scroller';
-import { init as initRelativeDates } from 'common/modules/ui/relativedates';
-import { initNotificationCounter } from 'common/modules/ui/notification-counter';
-import { checkElemsForVideos } from 'common/modules/atoms/youtube';
+import {enhanceTweets} from 'common/modules/article/twitter';
+import {Sticky} from 'common/modules/ui/sticky';
+import {scrollToElement} from 'lib/scroller';
+import {init as initRelativeDates} from 'common/modules/ui/relativedates';
+import {initNotificationCounter} from 'common/modules/ui/notification-counter';
+import {checkElemsForVideos} from 'common/modules/atoms/youtube';
 
 
 const updateBlocks = (opts, pollUpdates) => {
     const options = Object.assign(
         {
             toastOffsetTop: 12,
-            minUpdateDelay: (isBreakpoint({ min: 'desktop' }) ? 10 : 30) * 1000,
+            minUpdateDelay: (isBreakpoint({min: 'desktop'}) ? 10 : 30) * 1000,
             maxUpdateDelay: 20 * 60 * 1000, // 20 mins
             backoffMultiplier: 0.75, // increase or decrease the back off rate by modifying this
         },
@@ -54,7 +54,8 @@ const updateBlocks = (opts, pollUpdates) => {
     const scrolledPastTopBlock = () =>
         $liveblogBody.offset().top < window.pageYOffset;
 
-    const isLivePage = !window.location.search.includes('?page=');
+    // TODO:: Find out what this check was originally for. It was previously called isLivePage but both live and dead pages have '?page=' param if a link (such as key events) are clicked
+    const hasPageParams = window.location.search.includes('?page=');
     const revealInjectedElements = () => {
         fastdom.mutate(() => {
             $('.autoupdate--hidden', $liveblogBody)
@@ -81,7 +82,7 @@ const updateBlocks = (opts, pollUpdates) => {
         });
     };
 
-    const injectNewBlocks = (newBlocks, userInteraction) => {
+    const injectNewBlocks = (newBlocks, isUserInteraction) => {
         // Clean up blocks before insertion
         const resultHtml = $.create(`<div>${newBlocks}</div>`)[0];
         let elementsToAdd;
@@ -89,7 +90,7 @@ const updateBlocks = (opts, pollUpdates) => {
         fastdom.mutate(() => {
             bonzo(resultHtml.children).addClass('autoupdate--hidden');
             elementsToAdd = Array.from(resultHtml.children);
-            if (userInteraction) {
+            if (isUserInteraction) {
                 $liveblogBody.empty()
                 mediator.emit('modules:autoupdate:user-interaction');
             }
@@ -119,10 +120,11 @@ const updateBlocks = (opts, pollUpdates) => {
 
         let count = 0;
         const filterByKeyEvents = `&filterByKeyEvents=${filterStatus ? 'true' : 'false'}`;
-        const userInteractionStatus = !auto
-        const userInteraction = `&userInteraction=${userInteractionStatus}`
+        const isUserInteraction = !auto
+        const userInteraction = `&userInteraction=${isUserInteraction}`
+        const userUpdate = !hasPageParams || isUserInteraction
         const shouldFetchBlocks = `&isLivePage=${
-            isLivePage ? 'true' : 'false'
+            userUpdate ? 'true' : 'false'
         }`;
         const latestBlockIdToUse = latestBlockId || 'block-0';
         const params = `?lastUpdate=${latestBlockIdToUse}${shouldFetchBlocks}${filterByKeyEvents}${userInteraction}`;
@@ -155,11 +157,9 @@ const updateBlocks = (opts, pollUpdates) => {
                     mediator.emit('modules:autoupdate:unread', unreadBlocksNo);
 
                     latestBlockId = resp.mostRecentBlockId;
-
-                    if (isLivePage) {
-                        injectNewBlocks(resp.html, userInteraction);
-
-                        if (scrolledPastTopBlock() && !userInteraction) {
+                    if (userUpdate) {
+                        injectNewBlocks(resp.html, isUserInteraction);
+                        if (scrolledPastTopBlock() && !isUserInteraction) {
                             toastButtonRefresh();
                         } else {
                             displayNewBlocks();
@@ -168,7 +168,6 @@ const updateBlocks = (opts, pollUpdates) => {
                         toastButtonRefresh();
                     }
                 }
-
                 pollUpdates && setUpdateDelay();
             })
             .catch(() => {
@@ -178,12 +177,12 @@ const updateBlocks = (opts, pollUpdates) => {
 
     const setUpListeners = () => {
         bean.on(document.body, 'click', '.filter__button', () => {
-                filterStatus = !filterStatus;
-                checkForUpdates(false)
+            filterStatus = !filterStatus;
+            checkForUpdates(false)
         })
 
         bean.on(document.body, 'click', '.toast__button', () => {
-            if (isLivePage) {
+            if (!hasPageParams) {
                 fastdom.measure(() => {
                     scrollToElement(qwery('.blocks')[0], 300, 'easeOutQuad');
 
@@ -201,7 +200,7 @@ const updateBlocks = (opts, pollUpdates) => {
         });
 
         mediator.on('modules:toast__tofix:unfixed', () => {
-            if (isLivePage && unreadBlocksNo > 0) {
+            if (!hasPageParams && unreadBlocksNo > 0) {
                 fastdom
                     .mutate(() => {
                         $toastButton.addClass('loading');
@@ -221,7 +220,7 @@ const updateBlocks = (opts, pollUpdates) => {
             checkForUpdates(true);
         });
 
-        mediator.on('modules:autoupdate:user-interaction', () =>{
+        mediator.on('modules:autoupdate:user-interaction', () => {
             fastdom.measure(() => {
                 scrollToElement(qwery('.content__meta-container'), 300, 'easeOutQuad');
 
@@ -232,8 +231,8 @@ const updateBlocks = (opts, pollUpdates) => {
                     .then(() => {
                         displayNewBlocks();
                     }).then(() => {
-                         bonzo($filterButton).html(filterStatus ? "Show all events" : "Filter by key events")
-                    });
+                    bonzo($filterButton).html(filterStatus ? "Show all events" : "Filter by key events")
+                });
 
             });
         });
@@ -259,4 +258,4 @@ const updateBlocks = (opts, pollUpdates) => {
     });
 };
 
-export { updateBlocks };
+export {updateBlocks};
