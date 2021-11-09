@@ -285,6 +285,7 @@
  "../projects/commercial/modules/dfp/prepare-prebid.ts": [
   "../../../../node_modules/@guardian/consent-management-platform/dist/index.d.ts",
   "../../../../node_modules/@guardian/consent-management-platform/dist/types/index.d.ts",
+  "../../../../node_modules/@guardian/libs/dist/types/index.d.ts",
   "../../../../node_modules/@types/lodash-es/index.d.ts",
   "../../../../node_modules/prebid.js/build/dist/prebid.js",
   "../lib/config.d.ts",
@@ -301,6 +302,7 @@
  ],
  "../projects/commercial/modules/dfp/redplanet.js": [
   "../../../../node_modules/@guardian/consent-management-platform/dist/index.js",
+  "../../../../node_modules/@guardian/libs/dist/cjs/index.js",
   "../lib/config.js",
   "../lib/launchpad.js",
   "../projects/common/modules/commercial/commercial-features.ts",
