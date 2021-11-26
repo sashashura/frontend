@@ -62,4 +62,4 @@ export const reportComment = (id: number | string, report: Object) =>
     send(`/comment/${id}/reportAbuse`, 'post', report);
 
 export const getUser = (id: number | string = 'me') =>
-    send(`/profile/${id}`, 'get');
+    send(`/profile/${id}?strict_sanctions_check=false`, 'get');
