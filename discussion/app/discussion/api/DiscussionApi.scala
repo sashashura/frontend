@@ -98,7 +98,7 @@ trait DiscussionApiLike extends Http with GuLogging {
   def myProfile(headers: Headers)(implicit executionContext: ExecutionContext): Future[Profile] = {
     def onError(r: WSResponse) =
       s"Discussion API: Error loading profile, status: ${r.status}, message: ${r.statusText}, response: ${r.body}"
-    val apiUrl = endpointUrl("/profile/me?strict_sanctions_check=false")
+    val apiUrl = endpointUrl("/profile/me")
     val authHeader = AuthHeaders.filterHeaders(headers).toSeq
 
     getJsonOrError(apiUrl, onError, authHeader: _*) map { json =>
