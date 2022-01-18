@@ -2,9 +2,11 @@ import { memoize } from 'lodash-es';
 import reportError from 'lib/report-error';
 
 export const fetchNonRefreshableLineItemIds = async (): Promise<number[]> => {
-	const response = await window.fetch(
-		'/commercial/non-refreshable-line-items.json',
+	const url = encodeURIComponent(
+		`${window.guardian.config.page.host}/commercial/non-refreshable-line-items.json`,
 	);
+
+	const response = await window.fetch(url);
 
 	if (response.ok) {
 		const json: unknown = await response.json();

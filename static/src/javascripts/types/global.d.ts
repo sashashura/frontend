@@ -101,6 +101,7 @@ interface PageConfig extends CommercialPageConfig {
 	sponsorshipType: string;
 	tones: string;
 	hasInlineMerchandise: boolean;
+	host: string;
 }
 
 interface Ophan {
