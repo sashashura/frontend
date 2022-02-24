@@ -1,17 +1,17 @@
 import { getConsentFor } from '@guardian/consent-management-platform';
-import { getInitialConsentState } from 'commercial/initial-consent-state';
+import { log } from '@guardian/libs';
 import { once } from 'lodash-es';
+import { getInitialConsentState } from 'commercial/initial-consent-state';
 import config from '../../../../lib/config';
 import { isGoogleProxy } from '../../../../lib/detect-google-proxy';
 import { commercialFeatures } from '../../../common/modules/commercial/commercial-features';
 import { a9 } from '../header-bidding/a9/a9';
 import { shouldIncludeOnlyA9 } from '../header-bidding/utils';
 import { dfpEnv } from './dfp-env';
-import { log } from '@guardian/libs';
 
-const setupA9 = () => {
+const setupA9 = (): Promise<void> => {
 	// TODO: Understand why we want to skip A9 for Google Proxy
-	if (isGoogleProxy()) return Promise.resolve(false);
+	if (isGoogleProxy()) return Promise.resolve();
 
 	// There are two articles that InfoSec would like to avoid loading scripts on
 	if (commercialFeatures.isSecureContact) {
@@ -27,6 +27,7 @@ const setupA9 = () => {
 			!config.get('page.hasPageSkin'))
 	) {
 		moduleLoadResult = import(
+			// @ts-expect-error Some problem importing this in here?
 			/* webpackChunkName: "a9" */ '../../../../lib/a9-apstag.js'
 		).then(() => {
 			a9.initialise();
@@ -44,7 +45,7 @@ const setupA9Once = once(setupA9);
  * Initialise A9, Amazon header bidding library
  * https://ams.amazon.com/webpublisher/uam/docs/web-integration-documentation/integration-guide/javascript-guide/display.html
  */
-export const init = () =>
+export const init = (): Promise<void> =>
 	getInitialConsentState()
 		.then((state) => {
 			if (getConsentFor('a9', state)) {
