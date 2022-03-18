@@ -56,6 +56,7 @@ val common = library("common")
       capiAws,
       okhttp,
     ) ++ jackson,
+    dependencyOverrides += "org.scala-lang.modules" %% "scala-collection-compat" % "2.6.0",
   )
   .settings(
     TestAssets / mappings ~= filterAssets,
@@ -189,6 +190,7 @@ val preview = application("preview")
 val rss = application("rss")
   .dependsOn(commonWithTests)
   .aggregate(common)
+  .settings(dependencyOverrides += "org.scala-lang.modules" %% "scala-collection-compat" % "2.6.0")
 
 val main = root()
   .aggregate(

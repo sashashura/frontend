@@ -5,8 +5,8 @@ import sbt._
 object Dependencies {
   val identityLibVersion = "3.240-C5"
   val awsVersion = "1.11.240"
-  val capiVersion = "17.22.1"
-  val faciaVersion = "3.3.8"
+  val capiVersion = "17.24.1"
+  val faciaVersion = "3.3.11"
   val dispatchVersion = "0.13.1"
   val romeVersion = "1.0"
   val jerseyVersion = "1.19.4"
@@ -32,7 +32,7 @@ object Dependencies {
   val cssParser = "net.sourceforge.cssparser" % "cssparser" % "0.9.23"
   val contentApiClient = "com.gu" %% "content-api-client" % capiVersion
   val dfpAxis = "com.google.api-ads" % "dfp-axis" % "4.15.1"
-  val faciaFapiScalaClient = "com.gu" %% "fapi-client-play27" % faciaVersion
+  val faciaFapiScalaClient = "com.gu" %% "fapi-client-play28" % faciaVersion
   val identityCookie = "com.gu.identity" %% "identity-cookie" % identityLibVersion
   val identityModel = "com.gu.identity" %% "identity-model" % identityLibVersion
   val identityAuthPlay = "com.gu.identity" %% "identity-auth-play" % identityLibVersion
@@ -40,7 +40,7 @@ object Dependencies {
   val jodaTime = "joda-time" % "joda-time" % "2.9.9"
   val jodaConvert = "org.joda" % "joda-convert" % "1.8.3"
   val jSoup = "org.jsoup" % "jsoup" % "1.10.3"
-  val json4s = "org.json4s" %% "json4s-native" % "3.5.3"
+  val json4s = "org.json4s" %% "json4s-native" % "4.0.4"
   val macwire = "com.softwaremill.macwire" %% "macros" % "2.3.0" % "provided"
   val mockito = "org.mockito" % "mockito-all" % "1.10.19" % Test
   val paClient = "com.gu" %% "pa-client" % "7.0.5"
