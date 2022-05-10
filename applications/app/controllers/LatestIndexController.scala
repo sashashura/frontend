@@ -23,8 +23,8 @@ class LatestIndexController(contentApiClient: ContentApiClient, val controllerCo
         .map {
           _.map { index =>
             index.page match {
-              case tag: Tag if tag.isSeries || tag.isBlog => handleSeriesBlogs(index)
-              case tag: Tag                               => MovedPermanently(s"${tag.metadata.url}/all")
+              case tag: Tag if tag.isSeries || tag.isBlog || tag.isContributor => handleSeriesBlogs(index)
+              case tag: Tag                                                    => MovedPermanently(s"${tag.metadata.url}/all")
               case section: Section =>
                 val url =
                   if (section.isEditionalised) Paths.stripEditionIfPresent(section.metadata.url)
