@@ -54,6 +54,7 @@ object ProjectSettings {
     resolvers ++= Seq(
       Resolver.typesafeRepo("releases"),
       Resolver.sonatypeRepo("releases"),
+      Resolver.sonatypeRepo("snapshots"),
       "Spy" at "https://files.couchbase.com/maven2/",
     ),
     update / evictionWarningOptions := EvictionWarningOptions.default
