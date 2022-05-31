@@ -313,18 +313,29 @@ const initialise = (window: Window, framework: Framework = 'tcfv2'): void => {
 		});
 	}
 
+	log('commercial', 'About to check Ozone config');
+
 	if (
 		window.guardian.config.switches.prebidOzone &&
 		isInVariantSynchronous(prebidPriceGranularity, 'variant')
 	) {
+		log('commercial', 'Ozone config');
+
 		// When in the variant of the test use a custom price granularity for Ozone
 		// The variant line items will have a separate structure
 		window.pbjs.setBidderConfig({
 			bidders: ['ozone'],
 			config: {
 				// Select the ozone granularity, use default if not defined for the size
-				guCustomPriceBucket: ({ width, height }) =>
-					ozonePriceGranularity(width, height) ?? priceGranularity,
+				guCustomPriceBucket: ({ width, height }) => {
+					log('commercial', 'Using a gu custom price bucket for ', {
+						width,
+						height,
+					});
+					return (
+						ozonePriceGranularity(width, height) ?? priceGranularity
+					);
+				},
 			},
 		});
 
