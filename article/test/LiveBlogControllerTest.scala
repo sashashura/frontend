@@ -9,7 +9,7 @@ import play.api.test._
 import play.api.test.Helpers._
 import org.scalatest.{BeforeAndAfterAll, DoNotDiscover}
 import org.scalatestplus.mockito.MockitoSugar
-import model.{LiveBlogPage, TopicResult, SelectedTopic, TopicType, AvailableTopic, TopicsLiveBlog}
+import model.{LiveBlogPage, TopicResult, Topic, TopicType, Topic, TopicsLiveBlog}
 import topics.{TopicS3Client, TopicService}
 
 import scala.concurrent.Future
@@ -40,20 +40,20 @@ import scala.concurrent.Future
     )
 
     val fakeAvailableTopics = Vector(
-      AvailableTopic(TopicType.Gpe, "United Kingdom", 6),
-      AvailableTopic(TopicType.Gpe, "Russia", 4),
-      AvailableTopic(TopicType.Org, "KPMG", 4),
-      AvailableTopic(TopicType.Gpe, "Ukraine", 3),
-      AvailableTopic(TopicType.Gpe, "China", 2),
-      AvailableTopic(TopicType.Gpe, "United States", 2),
-      AvailableTopic(TopicType.Loc, "Europe", 2),
-      AvailableTopic(TopicType.Gpe, "Moscow", 2),
-      AvailableTopic(TopicType.Org, "PZ Cussons", 2),
-      AvailableTopic(TopicType.Person, "Emmanuel Macron", 1),
+      Topic(TopicType.Gpe, "United Kingdom", 6),
+      Topic(TopicType.Gpe, "Russia", 4),
+      Topic(TopicType.Org, "KPMG", 4),
+      Topic(TopicType.Gpe, "Ukraine", 3),
+      Topic(TopicType.Gpe, "China", 2),
+      Topic(TopicType.Gpe, "United States", 2),
+      Topic(TopicType.Loc, "Europe", 2),
+      Topic(TopicType.Gpe, "Moscow", 2),
+      Topic(TopicType.Org, "PZ Cussons", 2),
+      Topic(TopicType.Person, "Emmanuel Macron", 1),
     );
 
     when(
-      fakeTopicService.getSelectedTopic(path, SelectedTopic(TopicType.Org, "Fifa")),
+      fakeTopicService.getSelectedTopic(path, Topic(TopicType.Org, "Fifa")),
     ) thenReturn Some(
       topicResult,
     )
