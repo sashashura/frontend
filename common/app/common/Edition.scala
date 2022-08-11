@@ -58,6 +58,7 @@ object Edition {
     editions.Us,
     editions.Au,
     editions.International,
+    editions.Europe
   )
 
   lazy val allWithBetaEditions = all ++ List(editions.Europe)
