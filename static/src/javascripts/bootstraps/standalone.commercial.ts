@@ -44,6 +44,8 @@ import { init as initTrackScrollDepth } from '../projects/commercial/modules/tra
 import { commercialFeatures } from '../projects/common/modules/commercial/commercial-features';
 import type { Modules } from './types';
 
+console.log('Test...');
+
 const { isDotcomRendering, page } = window.guardian.config;
 
 const decideAssetsPath = () => {
