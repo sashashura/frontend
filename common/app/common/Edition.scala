@@ -53,12 +53,16 @@ object Edition {
     if (!participatingInTest) all else allWithBetaEditions
   }
 
+  def editionsByRequest(implicit request: RequestHeader): List[Edition] = {
+    val participatingInTest = ActiveExperiments.isParticipating(EuropeNetworkFront)
+    if (!participatingInTest) all else allWithBetaEditions
+  }
+
   lazy val all = List(
     editions.Uk,
     editions.Us,
     editions.Au,
-    editions.International,
-    editions.Europe
+    editions.International
   )
 
   lazy val allWithBetaEditions = all ++ List(editions.Europe)
