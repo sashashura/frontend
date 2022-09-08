@@ -25,7 +25,7 @@ object NewsletterData {
   implicit val newsletterDataWrites = Json.writes[NewsletterData]
 }
 
-class NewsletterService(newsletterSignupAgent: NewsletterSignupAgent) {
+class NewsletterService(newsletterSignupAgent: NewsletterSignupAgent) extends GuLogging {
   private val EMBED_TAG_PREFIX = "campaign/email/"
   private val EMBED_TAG_TYPE = "Campaign"
 
@@ -86,24 +86,30 @@ class NewsletterService(newsletterSignupAgent: NewsletterSignupAgent) {
 
   def getNewsletterForArticle(articlePage: ArticlePage): Option[NewsletterData] = {
 
-    var response: Option[NewsletterResponse] = None
-    if (isSignUpPage(articlePage)) {
-      response = getNewsletterResponseFromSignUpPage(articlePage.article.content.metadata.id)
+    val response = if (isSignUpPage(articlePage)) {
+      log.debug("CE :: article is signup page")
+      getNewsletterResponseFromSignUpPage(articlePage.article.content.metadata.id)
     } else {
-      response = getNewsletterResponseFromTags(articlePage.article.tags.tags)
+      log.debug("CE :: article is not signup page")
+      getNewsletterResponseFromTags(articlePage.article.tags.tags)
     }
 
+    log.debug(s"Response from getNewsletterForArticle: \n $response")
+
     if (response.isEmpty || !shouldInclude(response.get)) {
-      return None
+      None
+    } else {
+      Option(convertNewsletterResponseToData(response.get))
     }
-    Option(convertNewsletterResponseToData(response.get))
   }
 
   def getNewsletterForLiveBlog(blogPage: LiveBlogPage): Option[NewsletterData] = {
     val response = getNewsletterResponseFromTags(blogPage.article.tags.tags)
+
     if (response.isEmpty || !shouldInclude(response.get)) {
-      return None
+      None
+    } else {
+      Option(convertNewsletterResponseToData(response.get))
     }
-    Option(convertNewsletterResponseToData(response.get))
   }
 }

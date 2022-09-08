@@ -275,6 +275,7 @@ object ContentFormat {
       case "PhotoEssayDesign"          => PhotoEssayDesign
       case "PrintShopDesign"           => PrintShopDesign
       case "ObituaryDesign"            => ObituaryDesign
+      case "NewsletterSignupDesign"    => NewsletterSignupDesign
       case _                           => ArticleDesign
     }
 
@@ -926,6 +927,8 @@ object Tags {
   val Poll = "type/poll"
   val Interactive = "type/interactive"
   val Sudoku = "type/sudoku"
+
+  val NewsletterSignup = "info/newsletter-sign-up"
 
   val liveMappings = Seq(
     "tone/minutebyminute",
