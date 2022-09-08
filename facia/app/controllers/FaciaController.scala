@@ -44,9 +44,10 @@ trait FaciaController
   private def getEditionFromString(edition: String): Edition = {
     val editionToFilterBy = edition match {
       case "international" => "int"
+      case "europe"        => "eur"
       case _               => edition
     }
-    Edition.all.find(_.id.toLowerCase() == editionToFilterBy).getOrElse(Edition.all.head)
+    Edition.allWithBetaEditions.find(_.id.toLowerCase() == editionToFilterBy).getOrElse(Edition.defaultEdition)
   }
 
   def applicationsRedirect(path: String)(implicit request: RequestHeader): Future[Result] = {
@@ -95,7 +96,12 @@ trait FaciaController
       edition: String = "",
   ): Action[AnyContent] =
     Action.async { implicit request =>
-      val e = if (edition.isEmpty) Edition(request) else getEditionFromString(edition)
+      val participatingInTest = ActiveExperiments.isParticipating(EuropeNetworkFront)
+      val e =
+        if (edition.isEmpty) Edition(request)
+        else if (!participatingInTest && getEditionFromString(edition) == editions.Europe) Edition.defaultEdition
+        else getEditionFromString(edition)
+
       val collectionsPath = if (section.isEmpty) e.id.toLowerCase else Editionalise(section, e)
       getSomeCollections(collectionsPath, count, offset, "none").map { collections =>
         Cached(CacheTime.Facia) {
