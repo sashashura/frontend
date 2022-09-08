@@ -46,8 +46,9 @@ object Edition {
 
   lazy val defaultEdition: Edition = editions.Uk
   def editionsByRequest(implicit request: RequestHeader): List[Edition] = {
-    val participatingInTest = ActiveExperiments.isParticipating(EuropeNetworkFront)
-    if (!participatingInTest) all else allWithBetaEditions
+    // val participatingInTest = ActiveExperiments.isParticipating(EuropeNetworkFront)
+    // if (!participatingInTest) all else
+    allWithBetaEditions
   }
 
   lazy val all = List(
