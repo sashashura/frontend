@@ -9,7 +9,7 @@ object International
       id = "INT",
       displayName = "International edition",
       timezone = DateTimeZone.forID("Europe/London"),
-      locale = Locale.forLanguageTag("en"),
+      locale = Locale.forLanguageTag("x-default"),
       networkFrontId = "international",
       editionalisedSections = Seq(""), // only the home page
     ) {
