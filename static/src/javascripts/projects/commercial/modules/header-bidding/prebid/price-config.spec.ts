@@ -1,27 +1,11 @@
 import {
 	criteoPriceGranularity,
-	indexPrebidPriceGranularity,
-	otherPrebidPriceGranularity,
+	indexPriceGranularity,
+	otherPriceGranularity,
 	ozonePriceGranularity,
-	priceGranularity,
 } from './price-config';
 
 describe('price granularity', () => {
-	test('default should have correct buckets', () => {
-		expect(priceGranularity).toEqual({
-			buckets: [
-				{
-					max: 100,
-					increment: 0.01,
-				},
-				{
-					max: 500,
-					increment: 1,
-				},
-			],
-		});
-	});
-
 	test('criteo should have correct buckets', () => {
 		expect(criteoPriceGranularity).toEqual({
 			buckets: [
@@ -140,7 +124,7 @@ describe('price granularity', () => {
 		])(
 			'Index Prebid slot with size %s gives correct granularity',
 			([width, height], expectedGranularity) => {
-				expect(indexPrebidPriceGranularity(width, height)).toEqual(
+				expect(indexPriceGranularity(width, height)).toEqual(
 					expectedGranularity,
 				);
 			},
@@ -192,9 +176,9 @@ describe('price granularity', () => {
 			[[300, 250], otherPrebidGranularityOption2],
 			[[320, 50], otherPrebidGranularityOption2],
 		])(
-			'Index Prebid slot with size %s gives correct granularity',
+			'Other Prebid slot with size %s gives correct granularity',
 			([width, height], expectedGranularity) => {
-				expect(otherPrebidPriceGranularity(width, height)).toEqual(
+				expect(otherPriceGranularity(width, height)).toEqual(
 					expectedGranularity,
 				);
 			},

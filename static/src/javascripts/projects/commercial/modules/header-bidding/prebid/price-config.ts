@@ -8,19 +8,6 @@ export type PrebidPriceGranularity = {
 	}>;
 };
 
-export const priceGranularity: PrebidPriceGranularity = {
-	buckets: [
-		{
-			max: 100,
-			increment: 0.01,
-		},
-		{
-			max: 500,
-			increment: 1,
-		},
-	],
-};
-
 export const criteoPriceGranularity: PrebidPriceGranularity = {
 	buckets: [
 		{
@@ -38,9 +25,6 @@ export const criteoPriceGranularity: PrebidPriceGranularity = {
 	],
 };
 
-/**
- * Compute the price granularity for Ozone based on the width and height of the slot
- */
 export const ozonePriceGranularity = (
 	width: number,
 	height: number,
@@ -97,7 +81,7 @@ export const ozonePriceGranularity = (
 	return undefined;
 };
 
-export const indexPrebidPriceGranularity = (
+export const indexPriceGranularity = (
 	width: number,
 	height: number,
 ): PrebidPriceGranularity | undefined => {
@@ -151,7 +135,7 @@ export const indexPrebidPriceGranularity = (
 	return undefined;
 };
 
-export const otherPrebidPriceGranularity = (
+export const otherPriceGranularity = (
 	width: number,
 	height: number,
 ): PrebidPriceGranularity | undefined => {
@@ -160,7 +144,7 @@ export const otherPrebidPriceGranularity = (
 	if (
 		sizeString === adSizes.skyscraper.toString() ||
 		sizeString === adSizes.halfPage.toString() ||
-		sizeString === '320,480' // TODO find the name of this ad sizing
+		sizeString === '320,480'
 	) {
 		return {
 			buckets: [
