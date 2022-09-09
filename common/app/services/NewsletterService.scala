@@ -55,7 +55,7 @@ class NewsletterService(newsletterSignupAgent: NewsletterSignupAgent) extends Gu
     newsletterSignupAgent.getNewsletters() match {
       case Left(_) => None
       case Right(list) =>
-        list.find(response => response.signupPage.nonEmpty && response.signupPage.get == "/" + articleId)
+        list.find(response => response.signupPage.nonEmpty && response.signupPage.get == s"/$articleId")
     }
   }
 
@@ -87,14 +87,10 @@ class NewsletterService(newsletterSignupAgent: NewsletterSignupAgent) extends Gu
   def getNewsletterForArticle(articlePage: ArticlePage): Option[NewsletterData] = {
 
     val response = if (isSignUpPage(articlePage)) {
-      log.debug("CE :: article is signup page")
       getNewsletterResponseFromSignUpPage(articlePage.article.content.metadata.id)
     } else {
-      log.debug("CE :: article is not signup page")
       getNewsletterResponseFromTags(articlePage.article.tags.tags)
     }
-
-    log.debug(s"Response from getNewsletterForArticle: \n $response")
 
     if (response.isEmpty || !shouldInclude(response.get)) {
       None

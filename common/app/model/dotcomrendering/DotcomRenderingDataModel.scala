@@ -207,7 +207,7 @@ object DotcomRenderingDataModel {
       pinnedPost = None,
       keyEvents = Nil,
       availableTopics = None,
-      newsletter = None,
+      promotedNewsletter = None,
       topicResult = None,
     )
   }
@@ -239,7 +239,7 @@ object DotcomRenderingDataModel {
       pinnedPost = None,
       keyEvents = Nil,
       availableTopics = None,
-      newsletter = newsletter,
+      promotedNewsletter = newsletter,
       topicResult = None,
       onwards = onwards,
     )
@@ -322,7 +322,7 @@ object DotcomRenderingDataModel {
       mostRecentBlockId,
       forceLive,
       availableTopics,
-      newsletter,
+      promotedNewsletter = newsletter,
       topicResult,
     )
   }
@@ -343,7 +343,7 @@ object DotcomRenderingDataModel {
       mostRecentBlockId: Option[String] = None,
       forceLive: Boolean = false,
       availableTopics: Option[Seq[Topic]],
-      newsletter: Option[NewsletterData],
+      promotedNewsletter: Option[NewsletterData],
       topicResult: Option[TopicResult],
       mostPopular: Option[Seq[OnwardCollectionResponse]] = None,
       onwards: Option[Seq[OnwardCollectionResponse]] = None,
@@ -518,7 +518,7 @@ object DotcomRenderingDataModel {
       webPublicationSecondaryDateDisplay = secondaryDateString(content, request),
       webTitle = content.metadata.webTitle,
       webURL = content.metadata.webUrl,
-      promotedNewsletter = newsletter,
+      promotedNewsletter = promotedNewsletter,
       mostPopular = mostPopular,
       onwards = onwards,
     )
