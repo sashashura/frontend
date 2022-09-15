@@ -72,6 +72,8 @@ GET        /story-package/*path.json                  controllers.StoryPackageCo
 GET        /nav/:editionId.json                       controllers.NavigationController.renderDCRNav(editionId: String)
 GET        /onwards/popular-in-tag/*tag.json          controllers.OnwardResponseController.popularInTagJson(tag)
 GET        /onwards/popular-in-tag/*tag               controllers.OnwardResponseController.popularInTagHtml(tag)
+GET        /onwards/series/*path.json                 controllers.OnwardResponseController.seriesJson(path)
+GET        /onwards/series/*path                      controllers.OnwardResponseController.seriesHtml(path)
 
 # AMP
 GET        /most-read-mf2.json                        controllers.MostPopularController.renderPopularMicroformat2()
