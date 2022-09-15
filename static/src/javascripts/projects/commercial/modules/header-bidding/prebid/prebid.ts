@@ -17,6 +17,7 @@ import type { PrebidPriceGranularity } from './price-config';
 import {
 	criteoPriceGranularity,
 	indexPrebidPriceGranularity,
+	otherPrebidPriceGranularity,
 	ozonePriceGranularity,
 	priceGranularity,
 } from './price-config';
@@ -60,10 +61,16 @@ type UserSync =
 			syncEnabled: false;
 	  };
 
+type CustomPriceBucketFn = (bid: {
+	width: number;
+	height: number;
+}) => PrebidPriceGranularity;
+
 type PbjsConfig = {
 	bidderTimeout: number;
 	timeoutBuffer?: number;
-	priceGranularity: PrebidPriceGranularity;
+	priceGranularity?: PrebidPriceGranularity;
+	guCustomPriceBucket?: CustomPriceBucketFn;
 	userSync: UserSync;
 	consentManagement?: ConsentManagement;
 	realTimeData?: unknown;
@@ -162,10 +169,7 @@ declare global {
 					 * This is a custom property that has been added to our fork of prebid.js
 					 * to select a price bucket based on the width and height of the slot
 					 */
-					guCustomPriceBucket?: (bid: {
-						width: number;
-						height: number;
-					}) => PrebidPriceGranularity;
+					guCustomPriceBucket?: CustomPriceBucketFn;
 				};
 			}) => void;
 			getConfig: (item?: string) => PbjsConfig & {
@@ -272,7 +276,23 @@ const initialise = (window: Window, framework: Framework = 'tcfv2'): void => {
 		{
 			bidderTimeout,
 			timeoutBuffer,
-			priceGranularity,
+			guCustomPriceBucket: ({
+				width,
+				height,
+			}: {
+				width: number;
+				height: number;
+			}) => {
+				const granularity =
+					otherPrebidPriceGranularity(width, height) ??
+					priceGranularity;
+				log(
+					'commercial',
+					`Custom default price bucket for size (${width},${height}):`,
+					granularity,
+				);
+				return granularity;
+			},
 			userSync,
 		},
 	);
