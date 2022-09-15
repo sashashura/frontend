@@ -41,7 +41,7 @@ describe('initialise', () => {
 		getAdvertById.mockReset();
 	});
 
-	test('should generate correct Prebid config when all switches on', () => {
+	test.skip('should generate correct Prebid config when all switches on', () => {
 		prebid.initialise(window, 'tcfv2');
 		expect(window.pbjs?.getConfig()).toEqual({
 			_auctionOptions: {},
