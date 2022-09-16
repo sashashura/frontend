@@ -4,7 +4,7 @@ import com.gu.contentapi.client.model.{ContentApiError, ItemQuery}
 import common.{Edition, GuLogging, ImplicitControllerExecutionContext, JsonComponent}
 import feed.MostReadAgent
 import model.{ApplicationContext, Cached, RelatedContent, RelatedContentItem, Tag}
-import model.dotcomrendering.OnwardCollectionResponse
+import model.dotcomrendering.{OnwardCollectionResponse, Trail}
 import models.Series
 import play.api.libs.ws.WSClient
 import play.api.mvc.{Action, AnyContent, BaseController, ControllerComponents, RequestHeader, Result}
@@ -62,7 +62,11 @@ class OnwardResponseController(
 
   def series(seriesId: String)(implicit request: RequestHeader): Future[Option[OnwardCollectionResponse]] = {
     val edition = Edition(request)
-    seriesService.fetch(edition, seriesId)
+    seriesService.fetch(edition, seriesId, f = (tag, trails) =>
+      OnwardCollectionResponse(
+      heading = tag.id,
+      trails = trails.map(_.faciaContent).map(Trail.pressedContentToTrail),
+    ))
   }
 
   def seriesJson(seriesId: String): Action[AnyContent] =
