@@ -35,7 +35,7 @@ class OnwardResponseController(
   }
   def popularInTagJson(tag: String): Action[AnyContent] =
     Action.async { implicit request =>
-      popularInTag(tag) flatMap renderJson
+      popularInTag(tag) map renderJson
     }
   def popularInTagHtml(tag: String): Action[AnyContent] =
     Action.async { implicit request =>
@@ -44,14 +44,12 @@ class OnwardResponseController(
 
   private def renderJson(
       onwardsCollection: OnwardCollectionResponse,
-  )(implicit request: RequestHeader): Future[Result] = {
-    Future.successful(Cached(600) {
+  )(implicit request: RequestHeader): Result = Cached(600) {
       JsonComponent
         .fromWritable[OnwardCollectionResponse](onwardsCollection)(
           request,
           OnwardCollectionResponse.collectionWrites,
-        )
-    })
+      )
   }
 
   private def renderHtml(
@@ -69,17 +67,13 @@ class OnwardResponseController(
 
   def seriesJson(seriesId: String): Action[AnyContent] =
     Action.async { implicit request =>
-      series(seriesId).flatMap {
-        case Some(onwardCollectionResponse) => renderJson(onwardCollectionResponse)
-        case None => NotFound
-      }
+      series(seriesId).map { _.map(renderJson).getOrElse(NotFound) }
     }
 
     def seriesHtml(seriesId: String): Action[AnyContent] =
       Action.async { implicit request =>
         series(seriesId).flatMap {
-          case Some(onwardCollectionResponse) => renderHtml(onwardCollectionResponse)
-          case None => NotFound
-        }
+          _.map(renderHtml).getOrElse(Future.successful(NotFound))
       }
+    }
 }
