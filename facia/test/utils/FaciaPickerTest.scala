@@ -76,7 +76,7 @@ import org.scalatestplus.mockito.MockitoSugar
     tier should be(RemoteRender)
   }
 
-  it should "return LocalRender if no flag is provided and participatingInTest and dcrCouldRender are true" in {
+  it should "return LocalRender if the request is for RSS" in {
     val isRSS = true
     val forceDCROff = false
     val forceDCR = false
