@@ -194,8 +194,6 @@ trait FaciaController
       case None => Future.successful(None)
     }
 
-    println("test>>>>>>>>>>>>>>>")
-
     val futureResult = futureFaciaPage.flatMap {
       case Some((faciaPage, _)) if nonHtmlEmail(request) =>
         successful(Cached(CacheTime.RecentlyUpdated)(renderEmail(faciaPage)))
