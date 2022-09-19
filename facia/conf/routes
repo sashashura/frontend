@@ -19,14 +19,14 @@ GET        /.well-known/security.txt.asc                                        
 GET        /.well-known/amphtml/apikey.pub                                          controllers.FaciaController.ampRsaPublicKey()
 
 # AMP
-GET        /container/count/:count/offset/:offset/mf2.json                                      controllers.FaciaController.renderSomeFrontContainersMf2(count: Int, offset: Int, section = "")
-GET        /container/count/:count/offset/:offset/section/:section/mf2.json                     controllers.FaciaController.renderSomeFrontContainersMf2(count: Int, offset: Int, section)
+GET        /container/count/:count/offset/:offset/mf2.json                          controllers.FaciaController.renderSomeFrontContainersMf2(count: Int, offset: Int, section: String)
+GET        /container/count/:count/offset/:offset/section/:section/mf2.json         controllers.FaciaController.renderSomeFrontContainersMf2(count: Int, offset: Int, section: String)
 
 #Facia Press
 GET        /collection/*id/rss                                                      controllers.FaciaController.renderCollectionRss(id)
 GET        /container/use-layout/*id.json                                           controllers.FaciaController.renderContainerJsonWithFrontsLayout(id)
 GET        /container/data/*id.json                                                 controllers.FaciaController.renderContainerDataJson(id)
-GET        /container/*id.json                                                     controllers.FaciaController.renderContainerJson(id)
+GET        /container/*id.json                                                      controllers.FaciaController.renderContainerJson(id)
 GET        /most-relevant-container/*path.json                                      controllers.FaciaController.renderMostRelevantContainerJson(path)
 
 # Editionalised pages

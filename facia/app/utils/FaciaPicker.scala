@@ -117,6 +117,10 @@ class FaciaPicker extends GuLogging {
   def getTier(faciaPage: PressedPage)(implicit request: RequestHeader): RenderType = {
     lazy val participatingInTest = ActiveExperiments.isParticipating(DCRFronts)
     lazy val checks = dcrChecks(faciaPage)
+
+    println("checks 1", request.isRss)
+    println("checks 2", checks.get("hasNoPaidForCards"))
+
     lazy val dcrCouldRender = checks.values.forall(checkValue => checkValue == true)
 
     val tier = decideTier(request.isRss, request.forceDCROff, request.forceDCR, participatingInTest, dcrCouldRender)
