@@ -89,9 +89,7 @@ object FrontChecks {
   def isNotPaidContent(faciaPage: PressedPage): Boolean = {
     // We don't support paid content
     // See: https://github.com/guardian/dotcom-rendering/issues/5945
-    !faciaPage.collections.exists(collection =>
-      collection.curated.exists(card => card.properties.isPaidFor),
-    )
+    !faciaPage.collections.exists(_.curated.exists(card => card.properties.isPaidFor))
   }
 
   def hasNoPaidForCards(faciaPage: PressedPage): Boolean = {
